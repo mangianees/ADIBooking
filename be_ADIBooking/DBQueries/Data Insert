@@ -1,0 +1,37 @@
+-- INSERT INTO ADIs (first_name, last_name, location) VALUES
+-- ('John', 'Doe', 'Leicester'),
+-- ('Jane', 'Smith', 'London'),
+-- ('Michael', 'Johnson', 'Manchester'),
+-- ('Emily', 'Davis', 'Birmingham'),
+-- ('David', 'Wilson', 'Liverpool');
+
+
+-- INSERT INTO Learners (first_name, last_name, location) VALUES
+-- ('Alice', 'Brown', 'Leicester'),
+-- ('Bob', 'Taylor', 'London'),
+-- ('Charlie', 'Anderson', 'Manchester'),
+-- ('Diana', 'Thomas', 'Birmingham'),
+-- ('Eve', 'Martin', 'Liverpool');
+
+
+-- INSERT INTO Availability (adi_id, date, time_slot, is_booked) VALUES
+-- (1, '2025-04-10', '9am to 11am', FALSE),
+-- (1, '2025-04-10', '11.30am to 12.30pm', FALSE),
+-- (1, '2025-04-10', '1.30pm to 3.30pm', FALSE),
+-- (1, '2025-04-10', '4pm to 6pm', FALSE),
+-- (2, '2025-04-11', '9am to 11am', FALSE),
+-- (2, '2025-04-11', '11.30am to 12.30pm', FALSE),
+-- (2, '2025-04-11', '1.30pm to 3.30pm', FALSE),
+-- (2, '2025-04-11', '4pm to 6pm', FALSE),
+-- (3, '2025-04-12', '9am to 11am', FALSE),
+-- (3, '2025-04-12', '11.30am to 12.30pm', FALSE),
+-- (3, '2025-04-12', '1.30pm to 3.30pm', FALSE),
+-- (3, '2025-04-12', '4pm to 6pm', FALSE),
+-- (4, '2025-04-13', '9am to 11am', FALSE),
+-- (4, '2025-04-13', '11.30am to 12.30pm', FALSE),
+-- (4, '2025-04-13', '1.30pm to 3.30pm', FALSE),
+-- (4, '2025-04-13', '4pm to 6pm', FALSE),
+-- (5, '2025-04-14', '9am to 11am', FALSE),
+-- (5, '2025-04-14', '11.30am to 12.30pm', FALSE),
+-- (5, '2025-04-14', '1.30pm to 3.30pm', FALSE),
+-- (5, '2025-04-14', '4pm to 6pm', FALSE);
