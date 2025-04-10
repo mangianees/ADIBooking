@@ -9,7 +9,7 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 });
-
+// console.log(user,host)
 const signUpADI = (req, res) => {
   const { firstName, lastName, location } = req.body;
   pool.query(
@@ -44,4 +44,22 @@ const getADIs = (req, res) => {
   );
 };
 
-module.exports = { getADIs, signUpADI };
+const getAvailability = (req, res) => {
+  pool.query(
+    "SELECT * FROM availability",
+    (error, results) => {
+      if (error) {
+        console.error("Error executing query", error.stack);
+        res.status(500).send("Error executing query");
+        return;
+      }
+      if (!results.rows) {
+        res.status(404).send("No data found");
+        return;
+      }
+      res.status(200).json(results.rows);
+    }
+  );
+};
+
+module.exports = { getADIs, signUpADI, getAvailability };
