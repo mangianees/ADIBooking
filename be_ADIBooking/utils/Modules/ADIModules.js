@@ -44,22 +44,34 @@ const getADIs = (req, res) => {
   );
 };
 
-const getAvailability = (req, res) => {
-  pool.query(
-    "SELECT * FROM availability",
-    (error, results) => {
-      if (error) {
-        console.error("Error executing query", error.stack);
-        res.status(500).send("Error executing query");
-        return;
-      }
-      if (!results.rows) {
-        res.status(404).send("No data found");
-        return;
-      }
-      res.status(200).json(results.rows);
+const getLearners = (req, res) => {
+  pool.query("SELECT * FROM learners;", (error, results) => {
+    if (error) {
+      console.error("Error executing query", error.stack);
+      res.status(500).send("Error executing query");
+      return;
     }
-  );
+    if (!results.rows) {
+      res.status(404).send("No data found");
+      return;
+    }
+    res.status(200).json(results.rows);
+  });
 };
 
-module.exports = { getADIs, signUpADI, getAvailability };
+const getAvailability = (req, res) => {
+  pool.query("SELECT * FROM availability", (error, results) => {
+    if (error) {
+      console.error("Error executing query", error.stack);
+      res.status(500).send("Error executing query");
+      return;
+    }
+    if (!results.rows) {
+      res.status(404).send("No data found");
+      return;
+    }
+    res.status(200).json(results.rows);
+  });
+};
+
+module.exports = { getADIs, signUpADI, getAvailability, getLearners };

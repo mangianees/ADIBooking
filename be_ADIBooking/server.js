@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
-const { getADIs, signUpADI, getAvailability } = require("./utils/Modules/ADIModules");
+const { getADIs, signUpADI, getAvailability,getLearners } = require("./utils/Modules/ADIModules");
 
 const app = express();
 
@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 
 app.post("/signup", signUpADI);
 app.get("/", getADIs);
+app.get("/learners", getLearners);
 app.get("/availability", getAvailability);
 
 app.listen(3000, () => {
