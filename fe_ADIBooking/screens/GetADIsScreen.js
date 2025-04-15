@@ -6,9 +6,10 @@ import {
   StyleSheet,
   ActivityIndicator,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 
-const GetADIsScreen = () => {
+const GetADIsScreen = ({ navigation }) => {
   const [adis, setAdis] = useState([]);
   const [availability, setAvailability] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,15 +22,8 @@ const GetADIsScreen = () => {
           fetch("http://192.168.0.28:3000/availability"),
         ]);
 
-        if (!adisRes.ok || !availabilityRes.ok) {
-          throw new Error("Failed to fetch data.");
-        }
-
         const adisData = await adisRes.json();
         const availabilityData = await availabilityRes.json();
-
-        console.log("✅ ADIs:", adisData);
-        console.log("✅ Availability:", availabilityData);
 
         setAdis(Array.isArray(adisData) ? adisData : []);
         setAvailability(Array.isArray(availabilityData) ? availabilityData : []);
@@ -44,58 +38,52 @@ const GetADIsScreen = () => {
   }, []);
 
   const calculateFreeSlotsPercentage = (adiId) => {
-    const adiIdStr = String(adiId);
-    const slots = availability.filter(
-      (slot) => String(slot.adi_id) === adiIdStr
-    );
-
-    if (slots.length === 0) {
-      console.log(`⚠️ No slots found for ADI ${adiIdStr}`);
-      return 0;
-    }
-
-    const freeSlots = slots.filter(
-      (slot) => slot.is_booked === false || slot.is_booked === 0
-    ).length;
-
-    const percent = Math.floor((freeSlots / slots.length) * 100);
-    console.log(
-      `📊 ADI ${adiIdStr}: ${freeSlots} free out of ${slots.length} → ${percent}%`
-    );
-    return percent;
+    const slots = availability.filter((slot) => slot.adi_id === adiId);
+    if (slots.length === 0) return 0;
+    const freeSlots = slots.filter((slot) => !slot.is_booked).length;
+    return Math.floor((freeSlots / slots.length) * 100);
   };
 
-  const getBackgroundColor = (percentage) => {
-    if (percentage > 80) return "#32CD32"; // LimeGreen
-    if (percentage > 60) return "#ADFF2F"; // GreenYellow
-    if (percentage > 40) return "#FFD700"; // Gold
-    if (percentage > 20) return "#FFA500"; // Orange
-    return "#FF6347"; // Tomato (low availability)
+  const enrichedAdis = adis.map((adi) => ({
+    ...adi,
+    freeSlotsPercentage: calculateFreeSlotsPercentage(adi.aid),
+  }));
+
+  const sortedAdis = enrichedAdis.sort((a, b) => b.freeSlotsPercentage - a.freeSlotsPercentage);
+
+  const getBarColor = (percentage) => {
+    if (percentage > 80) return "#32CD32";
+    if (percentage > 60) return "#ADFF2F";
+    if (percentage > 40) return "#FFD700";
+    if (percentage > 20) return "#FFA500";
+    if (percentage > 0) return "#FF6347";
+    return "#ff1919";
   };
 
-  const enrichedAdis = adis.map((adi) => {
-    const percentage = calculateFreeSlotsPercentage(adi.id);
-    return { ...adi, freeSlotsPercentage: percentage };
-  });
-
-  const sortedAdis = enrichedAdis.sort(
-    (a, b) => b.freeSlotsPercentage - a.freeSlotsPercentage
-  );
-
-  const renderADI = ({ item }) => {
-    const backgroundColor = getBackgroundColor(item.freeSlotsPercentage);
-    return (
-      <View style={[styles.card, { backgroundColor }]}>
+  const renderADI = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate("ADICalendar", { adi: item })}>
+      <View style={styles.card}>
         <Text style={styles.name}>
-          Full Name: {item.first_name} {item.last_name}
+          {item.first_name} {item.last_name}
         </Text>
         <Text style={styles.location}>Location: {item.location}</Text>
+        <View style={styles.barContainer}>
+          <View
+            style={[
+              styles.barFill,
+              {
+                width: `${item.freeSlotsPercentage}%`,
+                backgroundColor: getBarColor(item.freeSlotsPercentage),
+              },
+            ]}
+          />
+        </View>
         <Text style={styles.freeSlots}>
-          Free Availability: {item.freeSlotsPercentage}%
+          Free Slots: {item.freeSlotsPercentage}%
         </Text>
       </View>
-    );
-  };
+    </TouchableOpacity>
+  );
 
   if (loading) {
     return (
@@ -107,12 +95,10 @@ const GetADIsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Approved Driving Instructors</Text>
+      <Text style={styles.heading}>Available ADIs</Text>
       <FlatList
         data={sortedAdis}
-        keyExtractor={(item, index) =>
-          item?.id !== undefined ? item.id.toString() : index.toString()
-        }
+        keyExtractor={(item, index) => item.aid?.toString() || index.toString()}
         renderItem={renderADI}
       />
     </SafeAreaView>
@@ -135,21 +121,32 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 12,
     borderRadius: 10,
+    backgroundColor: "#fff",
     elevation: 3,
   },
   name: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#000",
   },
   location: {
     fontSize: 16,
     color: "#000",
   },
+  barContainer: {
+    height: 12,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 10,
+    overflow: "hidden",
+    marginTop: 8,
+    marginBottom: 6,
+  },
+  barFill: {
+    height: "100%",
+    borderRadius: 10,
+  },
   freeSlots: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#000",
   },
   loadingContainer: {
     flex: 1,

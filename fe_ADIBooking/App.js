@@ -1,70 +1,40 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import AvailabilityScreen from "./screens/AvailabilityScreen";
-import SignUpScreen from "./screens/SignUpScreen";
+import { SafeAreaView, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+
 import GetADIsScreen from "./screens/GetADIsScreen";
+import ADICalendarScreen from "./screens/ADICalendarScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import AvailabilityScreen from "./screens/AvailabilityScreen";
 import GetLearnersScreen from "./screens/GetLearnersScreen";
 
-const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
+
+const ADIStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen name="GetADIs" component={GetADIsScreen} options={{ title: "All ADIs" }} />
+    <Stack.Screen name="ADICalendar" component={ADICalendarScreen} options={{ title: "ADI Calendar" }} />
+  </Stack.Navigator>
+);
 
 const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("SignUp")}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SignUp")}>
           <Text style={styles.buttonText}>Sign Up as ADI</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("ADIs")}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ADIs")}>
           <Text style={styles.buttonText}>View All ADIs</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Learners")}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Learners")}>
           <Text style={styles.buttonText}>View All Learners</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Availability")}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Availability")}>
           <Text style={styles.buttonText}>See Availability</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  );
-};
-
-const DrawerContent = ({ navigation }) => {
-  return (
-    <SafeAreaView style={styles.drawerContainer}>
-      <View style={styles.drawerItemContainer}>
-        <TouchableOpacity
-          style={styles.drawerItem}
-          onPress={() => navigation.navigate("Item1")}
-        >
-          <Text style={styles.drawerItemText}>Item 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.drawerItem}
-          onPress={() => navigation.navigate("Item2")}
-        >
-          <Text style={styles.drawerItemText}>Item 2</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.drawerItem}
-          onPress={() => navigation.navigate("Item3")}
-        >
-          <Text style={styles.drawerItemText}>Item 3</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -74,11 +44,11 @@ const DrawerContent = ({ navigation }) => {
 const App = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+      <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={HomeScreen} />
         <Drawer.Screen name="Availability" component={AvailabilityScreen} />
         <Drawer.Screen name="SignUp" component={SignUpScreen} />
-        <Drawer.Screen name="ADIs" component={GetADIsScreen} />
+        <Drawer.Screen name="ADIs" component={ADIStack} />
         <Drawer.Screen name="Learners" component={GetLearnersScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
@@ -108,25 +78,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
-    fontFamily: "Roboto",
-  },
-  drawerContainer: {
-    flex: 1,
-    padding: 20,
-  },
-  drawerItemContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  drawerItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  drawerItemText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    fontFamily: "Open Sans",
   },
 });
 

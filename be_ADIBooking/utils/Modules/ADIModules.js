@@ -28,7 +28,7 @@ const signUpADI = (req, res) => {
 
 const getADIs = (req, res) => {
   pool.query(
-    "SELECT first_name, last_name, location FROM ADIs",
+    "SELECT aid,first_name, last_name, location FROM ADIs",
     (error, results) => {
       if (error) {
         console.error("Error executing query", error.stack);
