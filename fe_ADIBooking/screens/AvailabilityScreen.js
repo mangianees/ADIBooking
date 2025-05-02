@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-
+import { View, StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import { Text, Card,Title,Paragraph } from "react-native-paper";
+import { colors } from "../theme/colors";
 const AvailabilityScreen = () => {
   const [availability, setAvailability] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("http://192.168.0.28:3000/availability")
       .then((response) => response.json())
-      .then((data) => setAvailability(data))
-      .catch((error) => console.error("Error fetching availability:", error));
+      .then((data) => {
+        setAvailability(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching availability:", error);
+        setLoading(false);
+      });
   }, []);
 
   const formatDate = (dateString) => {
@@ -16,23 +24,37 @@ const AvailabilityScreen = () => {
     return date.toDateString(); // e.g., "Fri Apr 11 2025"
   };
 
+  const renderAvailability = ({ item }) => (
+    <Card style={styles.card}>
+      <Card.Content>
+        <Title style={styles.cardTextBold}>Date: {formatDate(item.date)}</Title>
+        <Paragraph style={styles.cardText}>No: {item.id}</Paragraph>
+        <Paragraph style={styles.cardText}>
+          Time Slot: {item.time_slot}
+        </Paragraph>
+        <Paragraph style={styles.cardText}>ADI ID: {item.adi_id}</Paragraph>
+        <Paragraph style={styles.cardText}>
+          Status: {item.is_booked ? "Booked" : "Available"}
+        </Paragraph>
+      </Card.Content>
+    </Card>
+  );
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ADI Availability</Text>
       <FlatList
         data={availability}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardText}>No: {item.id}</Text>
-            <Text style={styles.cardTextBold}>Date: {formatDate(item.date)}</Text>
-            <Text style={styles.cardText}>Time Slot: {item.time_slot}</Text>
-            <Text style={styles.cardText}>ADI ID: {item.adi_id}</Text>
-            <Text style={styles.cardText}>
-              Status: {item.is_booked ? "Booked" : "Available"}
-            </Text>
-          </View>
-        )}
+        renderItem={renderAvailability}
       />
     </View>
   );
@@ -42,7 +64,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background, // Changed background color
   },
   title: {
     fontSize: 24,
@@ -50,28 +72,31 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     fontFamily: "Roboto",
+    color: colors.font, // Changed font color
   },
   card: {
-    backgroundColor: "#396d2f",
-    padding: 15,
-    borderRadius: 10,
+    backgroundColor: colors.background, // Changed background color
     marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    borderRadius: 10,
     elevation: 3,
   },
   cardText: {
     fontSize: 16,
     marginBottom: 5,
     fontFamily: "San Francisco",
+    color: colors.font, // Changed font color
   },
   cardTextBold: {
     fontSize: 16,
     marginBottom: 5,
     fontFamily: "Open Sans",
     fontWeight: "bold",
+    color: colors.font, // Changed font color
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

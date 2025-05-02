@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button } from "react-native";
-
+import { View, StyleSheet } from "react-native";
+import { Text, TextInput, Button } from "react-native-paper";
+import {colors} from "../theme/colors"
 const SignUpScreen = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -14,34 +15,72 @@ const SignUpScreen = () => {
       },
       body: JSON.stringify({ firstName, lastName, location }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("User added with ID:", data);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then((text) => {
+        console.log("Response Text:", text);
+        try {
+          const data = JSON.parse(text);
+          console.log("User added with ID:", data);
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
       })
       .catch((error) => console.error("Error signing up:", error));
   };
 
   return (
-    <View>
-      <Text>Sign Up</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Sign Up</Text>
       <TextInput
-        placeholder="First Name"
+        label="First Name"
         value={firstName}
         onChangeText={setFirstName}
+        mode="outlined"
+        style={styles.input}
       />
       <TextInput
-        placeholder="Last Name"
+        label="Last Name"
         value={lastName}
         onChangeText={setLastName}
+        mode="outlined"
+        style={styles.input}
       />
       <TextInput
-        placeholder="Location"
+        label="Location"
         value={location}
         onChangeText={setLocation}
+        mode="outlined"
+        style={styles.input}
       />
-      <Button title="Sign Up" onPress={handleSignUp} />
+      <Button mode="contained" onPress={handleSignUp} style={styles.button}>
+        Sign Up
+      </Button>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    backgroundColor: colors.background, // Changed background color
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: "black", // Changed font color
+  },
+  input: {
+    marginBottom: 10,
+    color: "black", // Changed font color
+  },
+  button: {
+    marginTop: 20,
+  },
+});
 
 export default SignUpScreen;

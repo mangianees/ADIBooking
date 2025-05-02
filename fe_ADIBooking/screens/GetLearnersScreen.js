@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-
+import { View, StyleSheet, ActivityIndicator, FlatList } from 'react-native';
+import { Text, Card,Title,Paragraph } from 'react-native-paper';
+import {colors} from "../theme/colors";
 const GetLearnersScreen = () => {
   const [Learners, setLearners] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,16 +19,20 @@ const GetLearnersScreen = () => {
       });
   }, []);
 
+  const maskPostCode = (postCode) => {
+    return postCode.slice(0, -3) + '***';
+  };
+
   const renderLearners = ({ item }) => (
-    <View style={styles.card}>
-      <Text style={styles.name}> Full Name:
-        {item.first_name} {item.last_name}
-      </Text>
-      <Text style={styles.location}>Location: {item.location}</Text>
-      <Text style={styles.goal}>Goal: {item.goal}</Text>
-      <Text style={styles.post_code}>Post Code: {item.post_code}</Text>
-      <Text style={styles.door_number}>Door No: {item.door_number}</Text>
-    </View>
+    <Card style={styles.card}>
+      <Card.Content>
+        <Title style={styles.name}>Full Name: {item.first_name} {item.last_name}</Title>
+        <Paragraph style={styles.location}>Location: {item.location}</Paragraph>
+        <Paragraph style={styles.goal}>Goal: {item.goal}</Paragraph>
+        <Paragraph style={styles.post_code}>Post Code: {maskPostCode(item.post_code)}</Paragraph>
+        <Paragraph style={styles.door_number}>Door No: {item.door_number}</Paragraph>
+      </Card.Content>
+    </Card>
   );
 
   if (loading) {
@@ -53,30 +58,41 @@ const GetLearnersScreen = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: colors.background, // Changed background color
     flex: 1,
   },
   heading: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333',
+    color: colors.font, // Changed font color
   },
   card: {
-    backgroundColor: '#fff',
-    padding: 15,
     marginBottom: 12,
     borderRadius: 10,
     elevation: 2,
+    backgroundColor: colors.background, // Changed background color
   },
   name: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#000',
+    color: colors.font, // Changed font color
   },
   location: {
     fontSize: 16,
-    color: '#555',
+    color: colors.font, // Changed font color
+  },
+  goal: {
+    fontSize: 16,
+    color: colors.font, // Changed font color
+  },
+  post_code: {
+    fontSize: 16,
+    color: colors.font, // Changed font color
+  },
+  door_number: {
+    fontSize: 16,
+    color: colors.font, // Changed font color
   },
   loadingContainer: {
     flex: 1,

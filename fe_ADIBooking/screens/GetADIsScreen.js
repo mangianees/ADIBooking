@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
-
+import { colors } from "../theme/colors";
 const GetADIsScreen = ({ navigation }) => {
   const [adis, setAdis] = useState([]);
   const [availability, setAvailability] = useState([]);
@@ -108,29 +108,30 @@ const GetADIsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: colors.background, // Changed background color
     flex: 1,
   },
   heading: {
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
-    color: "#333",
+    color: colors.font, // Changed font color
   },
   card: {
     padding: 15,
     marginBottom: 12,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background, // Changed background color
     elevation: 3,
   },
   name: {
     fontSize: 18,
     fontWeight: "600",
+    color: colors.font, // Changed font color
   },
   location: {
     fontSize: 16,
-    color: "#000",
+    color: colors.font, // Changed font color
   },
   barContainer: {
     height: 12,
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
   freeSlots: {
     fontSize: 16,
     fontWeight: "bold",
+    color: colors.font, // Changed font color
   },
   loadingContainer: {
     flex: 1,

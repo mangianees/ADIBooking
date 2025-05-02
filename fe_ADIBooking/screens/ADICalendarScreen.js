@@ -6,8 +6,10 @@ import {
   ActivityIndicator,
   FlatList,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
+import { colors } from "../theme/colors";
 
 const ADICalendarScreen = ({ route }) => {
   const { adi } = route.params;
@@ -35,16 +37,27 @@ const ADICalendarScreen = ({ route }) => {
   }, [adi]);
 
   const availabilityByDate = availability.reduce((acc, slot) => {
-    const date = slot.date.split("T")[0]; // ensure proper format
+    const date = slot.date.split("T")[0];
     if (!acc[date]) acc[date] = [];
     acc[date].push(slot);
     return acc;
   }, {});
 
   const markedDates = Object.keys(availabilityByDate).reduce((acc, date) => {
-    acc[date] = { marked: true, dotColor: "green" };
+    acc[date] = {
+      marked: true,
+      dotColor: "green",
+    };
     return acc;
   }, {});
+
+  if (selectedDate) {
+    markedDates[selectedDate] = {
+      ...markedDates[selectedDate],
+      selected: true,
+      selectedColor: "#007AFF",
+    };
+  }
 
   const slotsForSelectedDate =
     selectedDate && availabilityByDate[selectedDate]
@@ -62,18 +75,81 @@ const ADICalendarScreen = ({ route }) => {
       ) : (
         <>
           <Calendar
-            onDayPress={(day) => setSelectedDate(day.dateString)}
-            markedDates={{
-              ...markedDates,
-              ...(selectedDate && {
-                [selectedDate]: {
-                  selected: true,
-                  marked: markedDates[selectedDate]?.marked,
-                  selectedColor: "#007AFF",
-                },
-              }),
+  onDayPress={(day) => {
+    setSelectedDate(day.dateString);
+  }}
+  markedDates={{
+    ...(selectedDate && {
+      [selectedDate]: {
+        selected: true,
+        selectedColor: "#007AFF",
+      },
+    }),
+  }}
+  markingType="custom"
+  theme={{
+    backgroundColor: "#F9F9F9",
+    calendarBackground: "#F9F9F9",
+    textSectionTitleColor: "#888",
+    selectedDayBackgroundColor: "#007AFF",
+    selectedDayTextColor: "#ffffff",
+    todayTextColor: "#007AFF",
+    dayTextColor: "#333",
+    textDisabledColor: "#d9e1e8",
+    arrowColor: "#ffffff",
+    monthTextColor: "#ffffff",
+    textMonthFontWeight: "bold",
+    textMonthFontSize: 18,
+    textDayFontWeight: "500",
+    textDayHeaderFontWeight: "600",
+    textDayHeaderFontSize: 14,
+  }}
+  style={styles.calendarStyle}
+  dayComponent={({ date, state }) => {
+    const slots = availabilityByDate[date.dateString];
+    const isSelected = selectedDate === date.dateString;
+
+    return (
+      <TouchableOpacity onPress={() => setSelectedDate(date.dateString)}>
+        <View style={{ alignItems: "center", paddingVertical: 6 }}>
+          <Text
+            style={{
+              color:
+                state === "disabled"
+                  ? "#ccc"
+                  : isSelected
+                  ? "white"
+                  : "#333",
+              backgroundColor: isSelected ? "#007AFF" : "transparent",
+              borderRadius: 16,
+              width: 32,
+              height: 32,
+              textAlign: "center",
+              lineHeight: 32,
+              fontWeight: "500",
             }}
-          />
+          >
+            {date.day}
+          </Text>
+          {slots && (
+            <View
+              style={{
+                marginTop: 4,
+                backgroundColor: "#007AFF",
+                borderRadius: 10,
+                paddingHorizontal: 6,
+              }}
+            >
+              <Text style={{ fontSize: 10, color: "white" }}>
+                {slots.length}
+              </Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  }}
+/>
 
           <Text style={styles.subheading}>
             {selectedDate
@@ -83,10 +159,12 @@ const ADICalendarScreen = ({ route }) => {
 
           <FlatList
             data={slotsForSelectedDate}
-            keyExtractor={(item, index) => `${item.adi_id}-${item.date}-${index}`}
+            keyExtractor={(item, index) =>
+              `${item.adi_id}-${item.date}-${index}`
+            }
             renderItem={({ item }) => (
               <View style={styles.slotCard}>
-                <Text style={styles.slotText}>Time: {item.time}</Text>
+                <Text style={styles.slotText}>Time: {item.time_slot}</Text>
               </View>
             )}
             ListEmptyComponent={
@@ -116,6 +194,13 @@ const styles = StyleSheet.create({
   subheading: {
     fontSize: 18,
     marginVertical: 10,
+  },
+  calendarStyle: {
+    borderRadius: 10,
+    overflow: "hidden",
+    marginBottom: 10,
+    elevation: 2,
+    backgroundColor: colors.background, // Header background color
   },
   slotCard: {
     padding: 12,
