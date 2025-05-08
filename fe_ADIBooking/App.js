@@ -8,7 +8,11 @@ import {
   Dimensions,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { colors } from "./theme/colors";
 import GetADIsScreen from "./screens/GetADIsScreen";
@@ -24,8 +28,16 @@ const Stack = createStackNavigator();
 
 const ADIStack = () => (
   <Stack.Navigator>
-    <Stack.Screen name="GetADIs" component={GetADIsScreen} options={{ title: "All ADIs" }} />
-    <Stack.Screen name="ADICalendar" component={ADICalendarScreen} options={{ title: "ADI Calendar" }} />
+    <Stack.Screen
+      name="GetADIs"
+      component={GetADIsScreen}
+      options={{ title: "All ADIs" }}
+    />
+    <Stack.Screen
+      name="ADICalendar"
+      component={ADICalendarScreen}
+      options={{ title: "ADI Calendar" }}
+    />
   </Stack.Navigator>
 );
 
@@ -36,7 +48,7 @@ const BackgroundText = () => {
   for (let i = 0; i < repeats; i++) {
     lines.push(
       <Text key={i} style={styles.backgroundText}>
-        instructly   instructly   instructly   instructly
+        instructly instructly instructly instructly
       </Text>
     );
   }
@@ -50,16 +62,28 @@ const HomeScreen = ({ navigation }) => {
       <BackgroundText />
       <Text style={styles.header}>instructly</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SignUp")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("SignUp")}
+        >
           <Text style={styles.buttonText}>Sign Up as ADI</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ADIs")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("ADIs")}
+        >
           <Text style={styles.buttonText}>View All ADIs</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Learners")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Learners")}
+        >
           <Text style={styles.buttonText}>View All Learners</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Availability")}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("Availability")}
+        >
           <Text style={styles.buttonText}>See Availability</Text>
         </TouchableOpacity>
       </View>
@@ -84,7 +108,7 @@ const App = () => {
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         screenOptions={{
           drawerStyle: {
-            backgroundColor: colors.background, // Changed menu color
+            backgroundColor: colors.background,
           },
           drawerLabelStyle: {
             color: colors.font,
@@ -104,7 +128,7 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background, // Changed background color
+    backgroundColor: colors.background,
     justifyContent: "flex-start",
     alignItems: "center",
     padding: 20,
@@ -124,7 +148,7 @@ const styles = StyleSheet.create({
   backgroundText: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#7a8c23", // Changed text color
+    color: "#7a8c23",
     lineHeight: 50,
   },
   header: {
@@ -160,3 +184,4 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+

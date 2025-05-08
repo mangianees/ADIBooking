@@ -60,7 +60,7 @@ const getLearners = (req, res) => {
 };
 
 const getAvailability = (req, res) => {
-  pool.query("SELECT * FROM availability", (error, results) => {
+  pool.query("SELECT * FROM availability where is_booked = false;", (error, results) => {
     if (error) {
       console.error("Error executing query", error.stack);
       res.status(500).send("Error executing query");
